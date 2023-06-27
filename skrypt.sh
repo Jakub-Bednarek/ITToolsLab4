@@ -30,9 +30,9 @@ do
         -h|--help)
             echo "Syntax: skrypt.sh [--help|--date|--logs]"
             echo "Available options:"
-            echo "--help                 Print helps"
-            echo "--date                 Print current date"
-            echo "--logs number_of_files Create number_of_files log files with index, date and script use"
+            echo "  -h, --help                  Print helps"
+            echo "  -d, --date                  Print current date"
+            echo "  -l, --logs number_of_files  Create number_of_files log files with index, date and script use"
             shift
             ;;
         -d|--date)
