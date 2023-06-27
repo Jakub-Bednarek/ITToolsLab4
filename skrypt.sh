@@ -19,5 +19,11 @@ do
     elif [ ${!i} == "--logs" ]; then
         number_of_logs=$((i+1))
         create_log_files ${!number_of_logs}
+    elif [ ${!i} == "--help" ]; then
+        echo "Syntax: skrypt.sh [--help|--date|--logs]"
+        echo "Available options:"
+        echo "--help                 Print helps"
+        echo "--date                 Print current date"
+        echo "--logs number_of_files Create number_of_files log files with index, date and script used"
     fi
 done
