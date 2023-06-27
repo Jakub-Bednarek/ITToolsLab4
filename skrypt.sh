@@ -6,6 +6,12 @@ LONGOPTS=help,date,init,logs:
 OPTIONS=hdil:
 
 create_log_files() {
+    if [ $1 -le 0 ]
+    then
+        echo "Invalid value provided for --logs option, must be >= 1"
+        return
+    fi
+
     for (( i=1; i<=$1; i++))
     do
         if [ ! -d "./logs${i}" ]; then
