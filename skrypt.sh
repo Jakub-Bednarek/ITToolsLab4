@@ -2,11 +2,11 @@
 
 set -o errexit -o pipefail
 
-LONGOPTS=help,date,init,logs
-OPTIONS=hdil
+LONGOPTS=help,date,init,logs:
+OPTIONS=hdil:
 
 create_log_files() {
-    for i in {1..100}
+    for (( i=1; i<=$1; i++))
     do
         if [ ! -d "./logs${i}" ]; then
             mkdir ./logs${i}
@@ -44,8 +44,8 @@ do
             shift
             ;;
         -l|--logs)
-            create_log_files
-            shift
+            create_log_files $2
+            shift 2
             ;;
         --)
             shift
