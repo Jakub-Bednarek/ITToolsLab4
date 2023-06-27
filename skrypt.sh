@@ -72,9 +72,10 @@ do
         -h|--help)
             echo "Syntax: skrypt.sh [--help|--date|--logs]"
             echo "Available options:"
-            echo "  -h, --help                  Print helps"
-            echo "  -d, --date                  Print current date"
-            echo "  -l, --logs number_of_files  Create number_of_files log files with index, date and script use"
+            echo "  -h, --help                      Print helps"
+            echo "  -d, --date                      Print current date"
+            echo "  -l, --logs number_of_files      Create number_of_files log directories and files with index, date and script used"
+            echo "  -e, --error number_of_files     Create number_of_files error directories and files with index, date and script used"
             shift
             ;;
         -d|--date)
