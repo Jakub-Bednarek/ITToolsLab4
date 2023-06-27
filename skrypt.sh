@@ -2,18 +2,16 @@
 
 set -o errexit -o pipefail
 
-LONGOPTS=help,date,init,logs:
-OPTIONS=hdil:
+LONGOPTS=help,date,init,logs
+OPTIONS=hdil
 
 create_log_files() {
-    if [ -z "$1" ] || [ $1 -le 0 ]; then
-        echo "Invalid argument for --logs [-logs n_of_files]"
-        return
-    fi
-
-    for (( i=1; i<=$1; i++))
+    for i in {1..100}
     do
-        echo "${i} $(date) skrypt.sh" > logs$i.txt
+        if [ ! -d "./logs${i}" ]; then
+            mkdir ./logs${i}
+        fi
+        echo "logs${i}.txt skrypt.sh $(date)" > logs${i}/logs$i.txt
     done
 }
 
@@ -46,8 +44,8 @@ do
             shift
             ;;
         -l|--logs)
-            create_log_files $2
-            shift 2
+            create_log_files
+            shift
             ;;
         --)
             shift
