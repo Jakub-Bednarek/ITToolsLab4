@@ -2,8 +2,9 @@
 
 set -o errexit -o pipefail
 
-LONGOPTS=help,date,init,logs:
-OPTIONS=hdil:
+LONGOPTS=help,date,init,logs:,error:
+OPTIONS=hdil:e:
+DEFAULT_NUMBER_OF_ERROR_FILES=100
 
 create_log_files() {
     if [ $1 -le 0 ]
@@ -21,7 +22,44 @@ create_log_files() {
     done
 }
 
-! PARSED=$(getopt --options=$OPTIONS --longoptions=$LONGOPTS --name "$0" -- "$@")
+create_error_files() {
+    if [ $1 -le 0 ]
+    then
+        echo "Invalid value provided for --error option, must be >= 1"
+        return
+    fi
+
+    for (( i=1; i<=$1; i++ ))
+    do
+        if [ ! -d "./error${i}" ]; then
+            mkdir ./error${i}
+        fi
+        echo "error${i}.txt skrypt.sh $(date)" > error${i}/error$i.txt
+    done
+}
+
+# Nie mogłem znaleźć czy mechanizm 'enhanced getopt' wspiera domyślne wartości dla flag, dlatego parsuje wszystkie argumenty, w przypadku znalezienie flagi -e|-error sprawdzam czy wartość została podana
+# Jeśli nie ma podanej żadnej wartości to dorzucam domyślne 100 i podmieniam argumenty skryptu na poprawione tak aby getopt mógł je poprawnie zparsować
+number_regex='^[0-9]+$'
+corrected_arguments_array=()
+for (( i=1; i<=$#; i++ ))
+do
+    corrected_arguments_array+=(${!i})
+    if [ ${!i} == "-e" ] || [ ${!i} == "--error" ]
+    then
+        next_argument=$((i + 1))
+        if [[ ${!next_argument} =~ $number_regex ]]
+        then
+            corrected_arguments_array+=(${!next_argument})
+        else
+            corrected_arguments_array+=($DEFAULT_NUMBER_OF_ERROR_FILES)
+        fi
+    fi
+done
+
+set -- "${corrected_arguments_array[@]}"
+
+! PARSED=$(getopt --options=$OPTIONS --longoptions=$LONGOPTS -q --name "$0" -- "$@")
 if [[ ${PIPESTATUS[0]} -ne 0 ]]; then
     exit 1
 fi
@@ -51,6 +89,10 @@ do
             ;;
         -l|--logs)
             create_log_files $2
+            shift 2
+            ;;
+        -e|--error)
+            create_error_files $2
             shift 2
             ;;
         --)
