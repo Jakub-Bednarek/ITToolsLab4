@@ -2,8 +2,8 @@
 
 set -o errexit -o pipefail
 
-LONGOPTS=help,date,logs:
-OPTIONS=hdl:
+LONGOPTS=help,date,init,logs:
+OPTIONS=hdil:
 
 create_log_files() {
     if [ -z "$1" ] || [ $1 -le 0 ]; then
@@ -37,6 +37,12 @@ do
             ;;
         -d|--date)
             date
+            shift
+            ;;
+        -i|--init)
+            # Nie można zrobić git clone do tej samej ścieżki ponieważ znajdują się w niej już pliki dlatego nie używam dodatkowej "." po komendzie wskazującej na aktualną ścieżkę
+            git clone git@github.com:Jakub-Bednarek/ITToolsLab4.git
+            echo "PATH=$PATH:$(pwd)/skrypt.sh" >> ~/.bashrc
             shift
             ;;
         -l|--logs)
